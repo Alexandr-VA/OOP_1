@@ -10,24 +10,14 @@ class Lecturer(Mentor):
     def __init__(self, name, surname):
         super().__init__(name, surname)
         self.grades = {}
-        self.asc = []
-
-        '''Считает средний балл оценок за лекции'''
-        average_score = []
-        for score in self.grades.values():
-            average_score += score
-        if len(average_score) != 0:
-            a_s == (sum(average_score)/len(average_score))
-            self.asc.append(a_s)
-        #else:
-        #    return f'оценок нет'
+        self.average_lect_score = 0
 
     def __str__(self):
-        return (f'\nИмя: {self.name} \nФамилия: {self.surname} \nСредняя оценка за лекции: {self.grades}'
-               f'\n средний балл: {self.asc}')
+        return (f'\nИмя: {self.name} \nФамилия: {self.surname}')
+
 
 class Student:
-    '''Создаётся класс студентов, обучающихся на курсах'''
+    '''Создаётся класс студентов, обучающихся на курсах и оценивающих лекции'''
     def __init__(self, name, surname, gender):
         self.name = name
         self.surname = surname
@@ -41,14 +31,17 @@ class Student:
             if grade >= 0 and grade <= 10:
                 if course in lecturer.grades:
                     lecturer.grades[course] += [grade]
+
                 else:
                     lecturer.grades[course] = [grade]
         else:
             return 'Ошибка'
 
     def __str__(self):
-        return (f'\nИмя: {self.name} \nФамилия: {self.surname} \nСредняя оценка за домашние задания: {self.grades}'
-                f'\nКурсы в процессе изучения: {self.courses_in_progress} \nЗавершённые курсы: {self.finished_courses}')
+        return (f'\nИмя: {self.name} \nФамилия: {self.surname}'
+                f'\nКурсы в процессе изучения: {", ".join(self.courses_in_progress)}'
+                f'\nЗавершённые курсы: {", ".join(self.finished_courses)}')
+
 
 class Reviewer(Mentor):
     '''Создаётся класс преподавателей, проверяющих и оценивающих домашние работы студентов'''
@@ -67,6 +60,36 @@ class Reviewer(Mentor):
 
     def __str__(self):
         return f'\nИмя: {self.name} \nФамилия: {self.surname}'
+
+def lect_score(lecturer):
+    '''РАСЧЁТ СРЕДНЕГО БАЛЛА ОЦЕНОК ЗА ЛЕКЦИИ ПРЕПОДАВАТЕЛЯМ ОТ СТУДЕНТОВ'''
+    ratings = []
+    for value in lecturer.grades.values():
+        ratings += value
+        if len(ratings) != 0:
+            average_score = (sum(ratings)/len(ratings))
+    print (f'Средний балл: {round(average_score, 1)}')
+
+
+
+def student_score(student):
+    '''РАСЧЁТ СРЕДНЕГО БАЛЛА ОЦЕНОК ЗА ДОМАШНИЕ ЗАДАНИЯ СТУДЕНТАМ ОТ ПРОВЕРЯЮЩИХ ПРЕПОДАВАТЕЛЕЙ'''
+    ratings = []
+    for value in student.grades.values():
+        ratings += value
+        if len(ratings) != 0:
+            average_score = (sum(ratings)/len(ratings))
+    print (f'Средний балл: {round(average_score, 1)}')
+
+def lect_score(lecturer):
+    '''ЛУЧШИЙ ЛЕКТОР НА КУРСЕ'''
+    ratings = []
+    for value in lecturer.grades.values():
+        ratings += value
+        if len(ratings) != 0:
+            average_score = (sum(ratings)/len(ratings))
+    print (f'Средний балл: {round(average_score, 1)}')
+
 
 # Проверка работоспособности кода
 
@@ -107,13 +130,14 @@ reviewer_2.rate_hw(student_2, 'Python', 9)
 reviewer_2.rate_hw(student_2, 'ООП и работа c API', 10)
 
 print(lecturer_1)
+lect_score(lecturer_1)
+
 print(lecturer_2)
+lect_score(lecturer_2)
 
 print(student_1)
+student_score(student_1)
+
 print(student_2)
-
-print(reviewer_1)
-print(reviewer_2)
-
-
+student_score(student_2)
 
